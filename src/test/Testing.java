@@ -15,10 +15,10 @@ public class Testing {
 		int scale = 1;
 		String title = "NodesFrame";
 		double nsPerTick = 1e9D / 60D;
-		double nsPerRender = 1e9D / 30D;
+		double nsPerRender = 1e9D / 15D;
 		NodesFrame nodesFrame = new NodesFrame(width, height, scale, title, nsPerTick, nsPerRender);
 		int NNode = 20;
-		int Nneighbour = 4;
+		int Nneighbour = 3;
 		Color DefaultNodeColor=Color.GREEN;
 		int DEFAULTWIDTH = 10;
 		int DEFAULTHEIGHT = DEFAULTWIDTH;

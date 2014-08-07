@@ -19,9 +19,11 @@ public class KeyHandler implements KeyListener {
 	public Key e = new Key();
 	public Key c = new Key();
 	public Key x = new Key();
+	public Key openBracket = new Key();
+	public Key closeBracket = new Key();
+	public Key comma = new Key();
+	public Key period = new Key();
 
-	
-	
 	public Key r = new Key();
 
 	public KeyHandler(CanvasShell canvasShell) {
@@ -76,10 +78,10 @@ public class KeyHandler implements KeyListener {
 			break;
 		case KeyEvent.VK_R:
 			r.toggle(isPressed);
-			break;		
+			break;
 		case KeyEvent.VK_ADD:
 			add.toggle(isPressed);
-			break;	
+			break;
 		case KeyEvent.VK_SUBTRACT:
 			subtract.toggle(isPressed);
 			break;
@@ -95,8 +97,20 @@ public class KeyHandler implements KeyListener {
 		case KeyEvent.VK_X:
 			x.toggle(isPressed);
 			break;
-		default:			
-			System.out.println("new keyCode" + keyCode);			
+		case KeyEvent.VK_OPEN_BRACKET:
+			openBracket.toggle(isPressed);
+			break;
+		case KeyEvent.VK_CLOSE_BRACKET:
+			closeBracket.toggle(isPressed);
+			break;
+		case KeyEvent.VK_COMMA:
+			comma.toggle(isPressed);
+			break;
+		case KeyEvent.VK_PERIOD:
+			period.toggle(isPressed);
+			break;		
+		default:
+			System.out.println("new keyCode" + keyCode);
 		}
 	}
 }

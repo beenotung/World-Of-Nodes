@@ -37,17 +37,25 @@ public class NodesFrame extends CanvasShell {
 		}
 	}
 
-	private void addNewNode() {
+	private void addNode(boolean completeFindLinks) {		
 		nodes.add(newNode());
-		findLinks(nodes.get(nodes.size() - 1));
 		Nnode++;
-		findLinks();
+		if (completeFindLinks)
+			findLinks();
+		else
+			findLinks(nodes.get(nodes.size() - 1));
+		
 	}
 
-	private void removeOneNode() {
-		if (Nnode == Nneighbour)
+	private void removeNode(boolean completeFindLinks) {		
+		if (Nnode == (Nneighbour * Nneighbour))
 			return;
 		Node nodeDel = nodes.get(Utils.random.nextInt(Nnode));
+		if (completeFindLinks){
+			nodes.remove(nodeDel);
+			Nnode--;
+			findLinks();
+		}else{
 		for (Node node : nodes) {
 			if (node.equals(nodeDel))
 				continue;
@@ -55,8 +63,7 @@ public class NodesFrame extends CanvasShell {
 				node.neighbours.remove(nodeDel);
 		}
 		nodes.remove(nodeDel);
-		Nnode--;
-		findLinks();
+		Nnode--;}		
 	}
 
 	private Node newNode() {
@@ -118,7 +125,7 @@ public class NodesFrame extends CanvasShell {
 		graphics.fillRect(0, 0, WIDTH, HEIGHT);
 	}
 
-	private void findLinks() {
+	private void findLinks() {		
 		List<JointNode> list;
 		for (Node node1 : nodes) {
 			list = new ArrayList<JointNode>();
@@ -138,7 +145,7 @@ public class NodesFrame extends CanvasShell {
 				// node1.neighbours.add(list.get(ineighbour).node2);
 				while (list.get(index).node2.neighbours.indexOf(node1) >= 0) {
 					index++;
-					if ((index+1) >= list.size())
+					if ((index + 1) >= list.size())
 						break outerloop;
 				}
 				node1.neighbours.add(list.get(index).node2);
@@ -186,7 +193,7 @@ public class NodesFrame extends CanvasShell {
 		}
 	}
 
-	private void drawLinks() {
+	private void drawLinks() {		
 		int x1, y1, x2, y2;
 		for (Node node : nodes) {
 			x1 = Math.round(node.location.x);
@@ -220,12 +227,20 @@ public class NodesFrame extends CanvasShell {
 			randomNodeColor();
 			keyHandler.x.pressed = false;
 		}
-		if (keyHandler.add.pressed) {
-			addNewNode();
+		if (keyHandler.openBracket.pressed) {
+			removeNode(true);
 			keyHandler.add.pressed = false;
 		}
-		if (keyHandler.subtract.pressed) {
-			removeOneNode();
+		if (keyHandler.closeBracket.pressed) {
+			addNode(true);
+			keyHandler.add.pressed = false;
+		}
+		if (keyHandler.comma.pressed) {
+			removeNode(false);
+			keyHandler.add.pressed = false;
+		}
+		if (keyHandler.period.pressed) {
+			addNode(false);
 			keyHandler.add.pressed = false;
 		}
 	}
