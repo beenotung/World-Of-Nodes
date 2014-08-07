@@ -59,7 +59,7 @@ public class Pixels {
 	}
 
 	public void setOffset(int x, int y) {
-		xOffset -= x/scale/Math.PI;
-		yOffset -= y/scale/Math.PI;
+		xOffset -= x / scale / Math.PI;
+		yOffset -= y / scale / Math.PI;
 	}
 }

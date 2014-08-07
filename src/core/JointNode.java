@@ -7,8 +7,8 @@ public class JointNode extends Node implements Comparable<JointNode> {
 	public Double distance;
 
 	public JointNode(Node node1, Node node2) {
-		this.node1 = node1;
-		this.node2 = node2;
+		this.node1 = node1.clone();
+		this.node2 = node2.clone();
 		distance = Vector2D.Distance(node1.location, node2.location);
 	}
 
