@@ -51,6 +51,20 @@ public class NodesFrame extends CanvasShell {
 	}
 
 	private void findLinks() {
+		int x1,y1,x2,y2;
+		ArrayList <Node>list;
+		for (Node node1 : nodes) {
+			list=new ArrayList<Node>();
+			x1 = Math.round(node1.location.x);
+			y1 = Math.round(node1.location.y);
+			for (Node node2 : nodes) {
+				if (node1.equals(node2))
+					continue;
+				x2 = Math.round(node2.location.x);
+				y2 = Math.round(node2.location.y);
+				list.add(new JointNode(node1,node2));
+			}
+		}
 	}
 
 	private void drawNodes() {
@@ -62,17 +76,15 @@ public class NodesFrame extends CanvasShell {
 		}
 	}
 
-	private void drawLinks() {		
-		for (Node node1 : nodes) {
-			int x1 = Math.round(node1.location.x);
-			int y1 = Math.round(node1.location.y);
-			int x2, y2;
-			for (Node node2 : nodes) {
-				if (node1.equals(node2))
-					continue;
-				x2 = Math.round(node2.location.x);
-				y2 = Math.round(node2.location.y);
-				graphics.drawLine(x1, y1, x2, y2);
+	private void drawLinks() {	
+		int x1,y1,x2,y2;
+		for (Node node : nodes) {
+			 x1 = Math.round(node.location.x);
+			y1 = Math.round(node.location.y);			
+			for(Node neighbour:node.neighbours){
+				x2=Math.round(neighbour.location.x);
+				y2=Math.round(neighbour.location.y);
+				graphics.drawLine(x1, y1, x2, y2);	
 			}
 		}
 	}

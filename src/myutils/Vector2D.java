@@ -42,22 +42,25 @@ public class Vector2D {
 		setMagnitude(1);
 	}
 
-	public void plus(Vector2D pv) {
-		x += pv.x;
-		y += pv.y;
+	public void plus(Vector2D v) {
+		x += v.x;
+		y += v.y;
 	}
 
-	public void minus(Vector2D pv) {
-		x -= pv.x;
-		y -= pv.y;
+	public void minus(Vector2D v) {
+		x -= v.x;
+		y -= v.y;
 	}
 
-	public static Vector2D add(Vector2D p1, Vector2D p2) {
-		return new Vector2D(p1.x + p2.x, p1.y + p2.y);
+	public static Vector2D add(Vector2D v1, Vector2D v2) {
+		return new Vector2D(v1.x + v2.x, v1.y + v2.y);
 	}
 
-	public static Vector2D subtract(Vector2D p1, Vector2D p2) {
-		return new Vector2D(p1.x - p2.x, p1.y - p2.y);
+	public static Vector2D subtract(Vector2D v1, Vector2D v2) {
+		return new Vector2D(v1.x - v2.x, v1.y - v2.y);
 	}
 
+	public static double Distance(Vector2D v1,Vector2D v2){
+		return Math.sqrt(Math.pow(v1.x-v2.x, 2)+Math.pow(v1.y-v2.y, 2));
+	}
 }
