@@ -18,29 +18,36 @@ public abstract class CanvasShell extends Canvas implements Runnable {
 	protected int ticks = 0;
 	protected int renders = 0;
 
-	protected int WIDTH, HEIGHT, SCALE;
+	public int WIDTH, HEIGHT, SCALE;
+	public float cx, cy;
 	protected String TITLE;
+	protected final double DEFAULTnsPerTick, DEFAULTnsPerRender;
 	protected double nsPerTick, nsPerRender;
+	protected double deltaTick = 0;
+	protected double deltaRender = 0;
 	protected int background = Colors.get(0, 0, 0);
 
 	protected JFrame frame;
 	protected Graphics graphics;
 	protected BufferStrategy bufferStrategy;
 	protected BufferedImage image;
-	protected Pixels screen;
+	public Pixels screen;
 	protected int x, y, xPos, yPos;
 
-	protected KeyHandler keyHandler;
-	protected MouseHandler mouseHandler;
-	protected Vector2D mouseLocation;
+	public KeyHandler keyHandler;
+	public MouseHandler mouseHandler;
 
 	public CanvasShell(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
 		WIDTH = width / scale;
 		HEIGHT = height / scale;
+		cx = WIDTH / 2f;
+		cy = HEIGHT / 2f;
 		SCALE = scale;
 		TITLE = title;
-		this.nsPerTick = nsPerTick;
-		this.nsPerRender = nsPerRender;
+		this.DEFAULTnsPerTick = nsPerTick;
+		this.DEFAULTnsPerRender = nsPerRender;
+		this.nsPerTick = DEFAULTnsPerTick;
+		this.nsPerRender = DEFAULTnsPerRender;
 
 		setMinimumSize(new Dimension(WIDTH * SCALE / 2, HEIGHT * SCALE / 2));
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -56,14 +63,13 @@ public abstract class CanvasShell extends Canvas implements Runnable {
 		frame.setVisible(true);
 
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-		screen = new Pixels(((DataBufferInt) image.getRaster().getDataBuffer()).getData(), WIDTH, HEIGHT);
+		screen = new Pixels(((DataBufferInt) image.getRaster().getDataBuffer()).getData(), this);
 
 		createBufferStrategy(3);
 		bufferStrategy = getBufferStrategy();
 		graphics = bufferStrategy.getDrawGraphics();
 
 		keyHandler = new KeyHandler(this);
-		mouseLocation = new Vector2D(WIDTH / 2, HEIGHT / 2);
 		mouseHandler = new MouseHandler(this);
 	}
 
@@ -73,8 +79,6 @@ public abstract class CanvasShell extends Canvas implements Runnable {
 		long last = System.nanoTime();
 		long current;
 		long debugTimer = System.currentTimeMillis();
-		double deltaTick = 0;
-		double deltaRender = 0;
 		boolean shouldRender = false;
 		while (running) {
 			current = System.nanoTime();
@@ -101,49 +105,13 @@ public abstract class CanvasShell extends Canvas implements Runnable {
 		System.exit(0);
 	}
 
+	protected abstract void init();
+
 	protected void tick() {
 		tickCount++;
 		defaultKeyHandling();
 		defaultMouseHandling();
 		myTick();
-	}
-
-	private void defaultKeyHandling() {
-		if (keyHandler.esc.pressed) {
-			stop();
-		}
-		if (keyHandler.up.pressed) {
-			screen.scrollUp();
-		}
-		if (keyHandler.down.pressed) {
-			screen.scrollUpDown();
-		}
-		if (keyHandler.left.pressed) {
-			screen.scrollUpLeft();
-		}
-		if (keyHandler.right.pressed) {
-			screen.scrollUpRight();
-		}
-		if (keyHandler.pageup.pressed) {
-			screen.zoom(1);
-		}
-		if (keyHandler.pagedown.pressed) {
-			screen.zoom(-1);
-		}
-		if (keyHandler.equal.pressed) {
-			screen.reset();
-		}
-	}
-
-	private void defaultMouseHandling() {
-		if (mouseHandler.right.clicked) {
-			screen.setOffset(mouseHandler.right.x, mouseHandler.right.y);
-			mouseHandler.right.clicked = false;
-		}
-		if (mouseHandler.amountScrolled != 0) {
-			screen.zoom(mouseHandler.amountScrolled);
-			mouseHandler.amountScrolled = 0;
-		}
 	}
 
 	protected void render() {
@@ -159,13 +127,61 @@ public abstract class CanvasShell extends Canvas implements Runnable {
 		ticks = renders = 0;
 	}
 
-	protected abstract void init();
-
 	protected abstract void myTick();
 
 	protected abstract void myRender();
 
 	protected abstract void myDebugInfo();
+
+	private void defaultKeyHandling() {
+		if (keyHandler.esc.pressed) {
+			stop();
+		}
+		if (keyHandler.up.pressed) {
+			screen.scrollY(-1);
+		}
+		if (keyHandler.down.pressed) {
+			screen.scrollY(1);
+		}
+		if (keyHandler.left.pressed) {
+			screen.scrollX(-1);
+		}
+		if (keyHandler.right.pressed) {
+			screen.scrollX(1);
+		}
+		if (keyHandler.pageup.pressed) {
+			screen.zoom(1);
+		}
+		if (keyHandler.pagedown.pressed) {
+			screen.zoom(-1);
+		}
+		if (keyHandler.equal.pressed) {
+			screen.resetOffsetScale();
+			resetnsPerTickRender();
+		}
+		myKeyHandling();
+	}
+
+	protected void resetnsPerTickRender() {
+		nsPerTick=DEFAULTnsPerTick;
+		nsPerRender=DEFAULTnsPerRender;		
+	}
+
+	private void defaultMouseHandling() {
+		if (mouseHandler.right.clicked) {
+			screen.setOffset(mouseHandler.right.locationRelative);
+			mouseHandler.right.clicked = false;
+		}
+		if (mouseHandler.amountScrolled != 0) {
+			screen.zoom(mouseHandler.amountScrolled);
+			mouseHandler.amountScrolled = 0;
+		}
+		myMouseHandling();
+	}
+
+	protected abstract void myKeyHandling();
+
+	protected abstract void myMouseHandling();
 
 	public synchronized void start() {
 		System.out.println("CanvasShell start");

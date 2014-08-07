@@ -1,5 +1,6 @@
 package core;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class NodesFrame extends CanvasShell {
 		this.Nneighbour = Nneighbour;
 		this.DEFAULTWIDTH = DEFAULTWIDTH;
 		this.DEFAULTHEIGHT = DEFAULTHEIGHT;
+	}
+
+	private void initNodes() {
 		for (int iNode = 0; iNode < this.Nnode; iNode++) {
 			Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
 					* SCALE));
@@ -32,26 +36,46 @@ public class NodesFrame extends CanvasShell {
 			for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
 				neighbour.add(null);
 			}
-			nodes.add(new Node(location, neighbour));
+			nodes.add(new Node(DEFAULTWIDTH, DEFAULTHEIGHT, location, neighbour));
 		}
 	}
 
 	@Override
 	protected void init() {
+		initNodes();
+		findLinks();
 		screen.clear(Colors.get(0, 0, 0));
 		drawNodes();
-		findLinks();
 		drawLinks();
+	}
+
+	private void randomNodeColor() {
+		int index = Utils.random.nextInt(Nnode);
+		float r = Utils.random.nextFloat();
+		float g = Utils.random.nextFloat();
+		float b = Utils.random.nextFloat();
+		nodes.get(index).color = new Color(r, g, b);
+		spread(index);
 	}
 
 	@Override
 	protected void myTick() {
+		//randomNodeColor();
+		int index = Utils.random.nextInt(Nnode);
+		spread(index);		
+	}
 
+	private void spread(int index) {
+		Node node = nodes.get(index);
+		for (Node neighbour : nodes.get(index).neighbours) {
+			neighbour.color = node.color;
+		}
 	}
 
 	@Override
 	protected void myRender() {
-
+		drawNodes();
+		drawLinks();
 	}
 
 	private void findLinks() {
@@ -68,12 +92,14 @@ public class NodesFrame extends CanvasShell {
 			Collections.sort(list);
 
 			node1.neighbours = new ArrayList<Node>();
-			int index=0;
+			int index = 0;
 			for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
-				//node1.neighbours.add(list.get(ineighbour).node2);
-				while (list.get(index).node2.neighbours.indexOf(node1)>=0){index++;}
-				node1.neighbours.add(list.get(index).node2);				
-				index++;				
+				// node1.neighbours.add(list.get(ineighbour).node2);
+				while (list.get(index).node2.neighbours.indexOf(node1) >= 0) {
+					index++;
+				}
+				node1.neighbours.add(list.get(index).node2);
+				index++;
 			}
 		}
 	}
@@ -85,6 +111,7 @@ public class NodesFrame extends CanvasShell {
 		for (Node node : nodes) {
 			x = Math.round(node.location.x);
 			y = Math.round(node.location.y);
+			graphics.setColor(node.color);
 			graphics.fillOval(x - xOffset, y - yOffset, DEFAULTWIDTH, DEFAULTHEIGHT);
 		}
 	}
@@ -94,6 +121,7 @@ public class NodesFrame extends CanvasShell {
 		for (Node node : nodes) {
 			x1 = Math.round(node.location.x);
 			y1 = Math.round(node.location.y);
+			graphics.setColor(node.color);
 			for (Node neighbour : node.neighbours) {
 				x2 = Math.round(neighbour.location.x);
 				y2 = Math.round(neighbour.location.y);
@@ -113,6 +141,21 @@ public class NodesFrame extends CanvasShell {
 
 		// graphics.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 		bufferStrategy.show();
+	}
+
+	@Override
+	protected void myKeyHandling() {
+		// TODO Auto-generated method stub
+		if (keyHandler.x.pressed) {
+			randomNodeColor();
+			keyHandler.x.pressed = false;
+		}
+	}
+
+	@Override
+	protected void myMouseHandling() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

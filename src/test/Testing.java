@@ -15,7 +15,7 @@ public class Testing {
 		double nsPerTick = 1e9D / 60D;
 		double nsPerRender = 1e9D / 30D;
 		NodesFrame nodesFrame = new NodesFrame(width, height, scale, title, nsPerTick, nsPerRender);
-		int NNode = 5000;
+		int NNode = 1000;
 		int Nneighbour = 4;
 		int DEFAULTWIDTH = 10;
 		int DEFAULTHEIGHT = DEFAULTWIDTH;

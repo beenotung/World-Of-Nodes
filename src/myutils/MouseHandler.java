@@ -8,8 +8,9 @@ import java.awt.event.MouseWheelListener;
 
 public class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
 
-	public Vector2D mouseLocation;
-	private int cx,cy;
+	CanvasShell canvasShell;
+
+	public Mouse mouseMoved = new Mouse();
 
 	public Mouse left = new Mouse();
 	public Mouse middle = new Mouse();
@@ -18,12 +19,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	public int amountScrolled = 0;
 
 	public MouseHandler(CanvasShell canvasShell) {
+		this.canvasShell = canvasShell;
 		canvasShell.addMouseListener(this);
 		canvasShell.addMouseMotionListener(this);
 		canvasShell.addMouseWheelListener(this);
-		this.mouseLocation = canvasShell.mouseLocation;
-		cx=canvasShell.WIDTH/2;
-		cy=canvasShell.HEIGHT/2;
 	}
 
 	@Override
@@ -63,8 +62,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		mouseLocation.x = e.getX()-cx;
-		mouseLocation.y = e.getY()-cy;
+		mouseMoved.toggle(e.getX(), e.getY(), true, canvasShell.screen);
 	}
 
 	@Override
@@ -75,11 +73,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	private void toggle(int button, int x, int y, boolean isClicked) {
 		switch (button) {
 		case 1:
-			left.toggle(x-cx, y-cy, isClicked);
+			left.toggle(x, y, isClicked, canvasShell.screen);
+			break;
 		case 2:
-			middle.toggle(x-cx, y-cy, isClicked);
+			middle.toggle(x, y, isClicked, canvasShell.screen);
+			break;
 		case 3:
-			right.toggle(x-cx, y-cy, isClicked);
+			right.toggle(x, y, isClicked, canvasShell.screen);
 			break;
 		default:
 
@@ -89,5 +89,4 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 	private void scroll(int unitsToScroll) {
 		amountScrolled -= unitsToScroll;
 	}
-
 }

@@ -13,6 +13,16 @@ public class KeyHandler implements KeyListener {
 	public Key pageup = new Key();
 	public Key pagedown = new Key();
 	public Key equal = new Key();
+	public Key add = new Key();
+	public Key subtract = new Key();
+	public Key q = new Key();
+	public Key e = new Key();
+	public Key c = new Key();
+	public Key x = new Key();
+
+	
+	
+	public Key r = new Key();
 
 	public KeyHandler(CanvasShell canvasShell) {
 		canvasShell.addKeyListener(this);
@@ -64,8 +74,29 @@ public class KeyHandler implements KeyListener {
 		case KeyEvent.VK_ESCAPE:
 			esc.toggle(isPressed);
 			break;
-		default:
-			System.out.println("new keyCode" + keyCode);
+		case KeyEvent.VK_R:
+			r.toggle(isPressed);
+			break;		
+		case KeyEvent.VK_ADD:
+			add.toggle(isPressed);
+			break;	
+		case KeyEvent.VK_SUBTRACT:
+			subtract.toggle(isPressed);
+			break;
+		case KeyEvent.VK_Q:
+			q.toggle(isPressed);
+			break;
+		case KeyEvent.VK_E:
+			e.toggle(isPressed);
+			break;
+		case KeyEvent.VK_C:
+			c.toggle(isPressed);
+			break;
+		case KeyEvent.VK_X:
+			x.toggle(isPressed);
+			break;
+		default:			
+			System.out.println("new keyCode" + keyCode);			
 		}
 	}
 }
