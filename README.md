@@ -3,11 +3,15 @@
 ###Instruction:###
 
 Key **q** : quit the program
-
+#
+Key **x** : set a random node into random color and spread its neighbour(s)
+#
 Key **[** : remove a node with overview link finding
-Key **]** : add a new node with overview link finding
 
+Key **]** : add a new node with overview link finding
+#
 Key **,** : remove a node with current-view link finding
+
 Key **.** : add a new node with current-view link finding
 
 ***
