@@ -2,7 +2,7 @@
 
 **Instruction:**
 
-Key ***q*** : quit the program
+Key ****q**** : quit the program
 
 Key ***[*** : remove a node with overview link finding
 Key ***]*** : add a new node with overview link finding
