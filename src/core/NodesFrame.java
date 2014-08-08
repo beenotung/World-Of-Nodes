@@ -37,33 +37,34 @@ public class NodesFrame extends CanvasShell {
 		}
 	}
 
-	private void addNode(boolean completeFindLinks) {		
+	private void addNode(boolean completeFindLinks) {
 		nodes.add(newNode());
 		Nnode++;
 		if (completeFindLinks)
 			findLinks();
 		else
 			findLinks(nodes.get(nodes.size() - 1));
-		
+
 	}
 
-	private void removeNode(boolean completeFindLinks) {		
-		if (Nnode == (Nneighbour * Nneighbour))
+	private void removeNode(boolean completeFindLinks) {
+		if (Nnode == Nneighbour)
 			return;
 		Node nodeDel = nodes.get(Utils.random.nextInt(Nnode));
-		if (completeFindLinks){
+		if (completeFindLinks) {
 			nodes.remove(nodeDel);
 			Nnode--;
 			findLinks();
-		}else{
-		for (Node node : nodes) {
-			if (node.equals(nodeDel))
-				continue;
-			if (node.neighbours.contains(nodeDel))
-				node.neighbours.remove(nodeDel);
+		} else {
+			for (Node node : nodes) {
+				if (node.equals(nodeDel))
+					continue;
+				if (node.neighbours.contains(nodeDel))
+					node.neighbours.remove(nodeDel);
+			}
+			nodes.remove(nodeDel);
+			Nnode--;
 		}
-		nodes.remove(nodeDel);
-		Nnode--;}		
 	}
 
 	private Node newNode() {
@@ -125,7 +126,7 @@ public class NodesFrame extends CanvasShell {
 		graphics.fillRect(0, 0, WIDTH, HEIGHT);
 	}
 
-	private void findLinks() {		
+	private void findLinks() {
 		List<JointNode> list;
 		for (Node node1 : nodes) {
 			list = new ArrayList<JointNode>();
@@ -139,17 +140,18 @@ public class NodesFrame extends CanvasShell {
 			Collections.sort(list);
 
 			node1.neighbours = new ArrayList<Node>();
-			int index = 0;
+			int index = 0;			
 			for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
-				outerloop:
-				// node1.neighbours.add(list.get(ineighbour).node2);
-				while (list.get(index).node2.neighbours.indexOf(node1) >= 0) {
-					index++;
-					if ((index + 1) >= list.size())
-						break outerloop;
+				while (index != list.size()) {
+					if (list.get(index).node2.neighbours.indexOf(node1) >= 0)
+						index++;
+					else
+						break;
 				}
-				node1.neighbours.add(list.get(index).node2);
-				index++;
+				if (index != list.size()) {
+					node1.neighbours.add(list.get(index).node2);
+					index++;
+				}
 			}
 		}
 	}
@@ -167,16 +169,9 @@ public class NodesFrame extends CanvasShell {
 		}
 		Collections.sort(list);
 
-		node1.neighbours = new ArrayList<Node>();
-		int index = 0;
+		node1.neighbours = new ArrayList<Node>();		
 		for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
-			// node1.neighbours.add(list.get(ineighbour).node2);
-			/*
-			 * while (list.get(index).node2.neighbours.indexOf(node1) >= 0) {
-			 * index++; }
-			 */
-			node1.neighbours.add(list.get(index).node2);
-			index++;
+			node1.neighbours.add(list.get(ineighbour).node2);			
 		}
 
 	}
@@ -193,7 +188,7 @@ public class NodesFrame extends CanvasShell {
 		}
 	}
 
-	private void drawLinks() {		
+	private void drawLinks() {
 		int x1, y1, x2, y2;
 		for (Node node : nodes) {
 			x1 = Math.round(node.location.x);
@@ -222,7 +217,6 @@ public class NodesFrame extends CanvasShell {
 
 	@Override
 	protected void myKeyHandling() {
-		// TODO Auto-generated method stub
 		if (keyHandler.x.pressed) {
 			randomNodeColor();
 			keyHandler.x.pressed = false;
@@ -247,7 +241,6 @@ public class NodesFrame extends CanvasShell {
 
 	@Override
 	protected void myMouseHandling() {
-		// TODO Auto-generated method stub
 
 	}
 
