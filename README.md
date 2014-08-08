@@ -2,13 +2,13 @@
 
 **Instruction:**
 
-Key ****q**** : quit the program
+Key **q** : quit the program
 
-Key ***[*** : remove a node with overview link finding
-Key ***]*** : add a new node with overview link finding
+Key **[** : remove a node with overview link finding
+Key **]** : add a new node with overview link finding
 
-Key ***,*** : remove a node with current-view link finding
-Key ***.*** : add a new node with current-view link finding
+Key **,** : remove a node with current-view link finding
+Key **.** : add a new node with current-view link finding
 
 
 This README would normally document whatever steps are necessary to get your application up and running.
