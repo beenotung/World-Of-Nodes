@@ -71,7 +71,7 @@ public class NodesFrame extends CanvasShell {
         Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
                 * SCALE));
         /*
-		 * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
+         * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
 		 * ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
 		 * neighbour.add(null); } Node node=new Node(DefaultNodeWidth,
 		 * DefaultNodeHeight, DefaultNodeColor, location, neighbour);
