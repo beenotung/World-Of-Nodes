@@ -10,36 +10,50 @@ import java.util.Collections;
 import java.util.List;
 
 public class NodesFrame extends CanvasShell {
+    public static final String APPLICATION_NAME = "Nodes";
+    public static final String VERSION = "2.0.0";
+    public static final String APP_NAME = APPLICATION_NAME + " " + VERSION;
     private static final long serialVersionUID = 1L;
-    private int Nnode;
-    private int Nneighbour;
+    private static final double DEFAULT_NS_PER_TICK = 1e9D / 60D;
+    private static final double DEFAULT_NS_PER_RENDER = 1e9D / 3D;
+    private static final int DefaultNodeWidth = 10;
+    private static final int DefaultNodeHeight = 10;
+    private static final Color DefaultNodeInitColor = Color.green;
+    private static final Color DefaultBackGroundColor = Color.black;
+    private static Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
+    private int numNode;
+    private int numNeighbour;
+    private Color nodeInitColor, backGroundColor;
+    private int nodeWidth, nodeHeight;
     private ArrayList<Node> nodes = new ArrayList<Node>();
-    private int DefaultNodeWidth, DefaultNodeHeight;
-    private Color DefaultNodeColor, BackGroundColor;
 
     public NodesFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
         super(width, height, scale, title, nsPerTick, nsPerRender);
     }
 
-    public void setParameter(int NNode, int Nneighbour, Color DefaultNodeColor, int DefaultNodeWidth,
+    public NodesFrame(double widthRate, double heightRate, int scale) {
+        super((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, APP_NAME, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
+    }
+
+    public void setParameter(int numNode, int numNeighbour, Color DefaultNodeColor, int DefaultNodeWidth,
                              int DefaultNodeHeight, Color BackGroundColor) {
-        this.Nnode = NNode;
-        this.Nneighbour = Nneighbour;
-        this.DefaultNodeColor = DefaultNodeColor;
-        this.BackGroundColor = BackGroundColor;
-        this.DefaultNodeWidth = DefaultNodeWidth;
-        this.DefaultNodeHeight = DefaultNodeHeight;
+        this.numNode = numNode;
+        this.numNeighbour = numNeighbour;
+        this.nodeInitColor = DefaultNodeColor;
+        this.backGroundColor = BackGroundColor;
+        this.nodeWidth = DefaultNodeWidth;
+        this.nodeHeight = DefaultNodeHeight;
     }
 
     private void initNodes(Color color) {
-        for (int iNode = 0; iNode < this.Nnode; iNode++) {
+        for (int iNode = 0; iNode < this.numNode; iNode++) {
             nodes.add(newNode());
         }
     }
 
     private void addNode(boolean completeFindLinks) {
         nodes.add(newNode());
-        Nnode++;
+        numNode++;
         if (completeFindLinks)
             findLinks();
         else
@@ -48,12 +62,12 @@ public class NodesFrame extends CanvasShell {
     }
 
     private void removeNode(boolean completeFindLinks) {
-        if (Nnode == Nneighbour)
+        if (numNode == numNeighbour)
             return;
-        Node nodeDel = nodes.get(Utils.random.nextInt(Nnode));
+        Node nodeDel = nodes.get(Utils.random.nextInt(numNode));
         if (completeFindLinks) {
             nodes.remove(nodeDel);
-            Nnode--;
+            numNode--;
             findLinks();
         } else {
             for (Node node : nodes) {
@@ -63,7 +77,7 @@ public class NodesFrame extends CanvasShell {
                     node.neighbours.remove(nodeDel);
             }
             nodes.remove(nodeDel);
-            Nnode--;
+            numNode--;
         }
     }
 
@@ -72,11 +86,11 @@ public class NodesFrame extends CanvasShell {
                 * SCALE));
         /*
          * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
-		 * ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
+		 * countNeighbour = 0; countNeighbour < numNeighbour; countNeighbour++) {
 		 * neighbour.add(null); } Node node=new Node(DefaultNodeWidth,
-		 * DefaultNodeHeight, DefaultNodeColor, location, neighbour);
+		 * DefaultNodeHeight, nodeInitColor, location, neighbour);
 		 */
-        Node node = new Node(DefaultNodeWidth, DefaultNodeHeight, DefaultNodeColor, location);
+        Node node = new Node(DefaultNodeWidth, DefaultNodeHeight, nodeInitColor, location);
         // findLinks(node);
         return node;
     }
@@ -84,7 +98,7 @@ public class NodesFrame extends CanvasShell {
     @Override
     protected void init() {
         // frame.setResizable(true);
-        initNodes(DefaultNodeColor);
+        initNodes(nodeInitColor);
         findLinks();
         clearScreen();
         drawNodes();
@@ -92,7 +106,7 @@ public class NodesFrame extends CanvasShell {
     }
 
     private void randomNodeColor() {
-        int index = Utils.random.nextInt(Nnode);
+        int index = Utils.random.nextInt(numNode);
         float r = Utils.random.nextFloat();
         float g = Utils.random.nextFloat();
         float b = Utils.random.nextFloat();
@@ -103,7 +117,7 @@ public class NodesFrame extends CanvasShell {
     @Override
     protected void myTick() {
         // randomNodeColor();
-        int index = Utils.random.nextInt(Nnode);
+        int index = Utils.random.nextInt(numNode);
         spread(index);
     }
 
@@ -122,7 +136,7 @@ public class NodesFrame extends CanvasShell {
     }
 
     private void clearScreen() {
-        graphics.setColor(BackGroundColor);
+        graphics.setColor(backGroundColor);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
@@ -141,7 +155,7 @@ public class NodesFrame extends CanvasShell {
 
             node1.neighbours = new ArrayList<Node>();
             int index = 0;
-            for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
+            for (int countNeighbour = 0; countNeighbour < numNeighbour; countNeighbour++) {
                 while (index != list.size()) {
                     if (list.get(index).node2.neighbours.indexOf(node1) >= 0)
                         index++;
@@ -170,8 +184,8 @@ public class NodesFrame extends CanvasShell {
         Collections.sort(list);
 
         node1.neighbours = new ArrayList<Node>();
-        for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
-            node1.neighbours.add(list.get(ineighbour).node2);
+        for (int countNeighbour = 0; countNeighbour < numNeighbour; countNeighbour++) {
+            node1.neighbours.add(list.get(countNeighbour).node2);
         }
 
     }
