@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Nodes.iml" filepath="$PROJECT_DIR$/Nodes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../java-myutils/java-myutils.iml" filepath="$PROJECT_DIR$/../java-myutils/java-myutils.iml" />
+    </modules>
+  </component>
+</project>
+
