@@ -1,10 +1,10 @@
-package test;
+package launcher;
 
 import java.awt.Color;
 
 import core.NodesFrame;
 
-public class Testing {
+public class Launcher {
 
 	public static void main(String[] args) {
 

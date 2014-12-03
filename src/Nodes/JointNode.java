@@ -1,4 +1,4 @@
-package core;
+package Nodes;
 
 import myutils.Vector2D;
 

@@ -1,4 +1,4 @@
-package core;
+package Nodes;
 
 import java.awt.Color;
 import java.util.ArrayList;
