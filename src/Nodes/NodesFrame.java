@@ -2,30 +2,31 @@ package Nodes;
 
 import myutils.Utils;
 import myutils.Vector2D;
-import myutils.gui.CanvasShell;
+import myutils.gui.CanvasJFrame;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
-public class NodesFrame extends CanvasShell {
-    public static final String APPLICATION_NAME = "Nodes";
+public abstract class NodesFrame extends CanvasJFrame {
+    public static final String APPLICATION_NAME = "NodesFrame";
     public static final String VERSION = "2.0.0";
     public static final String APP_NAME = APPLICATION_NAME + " " + VERSION;
     private static final long serialVersionUID = 1L;
     private static final double DEFAULT_NS_PER_TICK = 1e9D / 60D;
-    private static final double DEFAULT_NS_PER_RENDER = 1e9D / 3D;
+    private static final double DEFAULT_NS_PER_RENDER = 1e9D / 30D;
     private static final int DefaultNodeWidth = 10;
     private static final int DefaultNodeHeight = 10;
     private static final Color DefaultNodeInitColor = Color.green;
     private static final Color DefaultBackGroundColor = Color.black;
     private static Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
-    private int numNode;
+    protected int numNode;
+    protected Vector<Node> nodes = new Vector<Node>();
+    protected int nodeWidth, nodeHeight;
     private int numNeighbour;
     private Color nodeInitColor, backGroundColor;
-    private int nodeWidth, nodeHeight;
-    private ArrayList<Node> nodes = new ArrayList<Node>();
 
     public NodesFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
         super(width, height, scale, title, nsPerTick, nsPerRender);
@@ -35,23 +36,30 @@ public class NodesFrame extends CanvasShell {
         super((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, APP_NAME, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
     }
 
-    public void setParameter(int numNode, int numNeighbour, Color DefaultNodeColor, int DefaultNodeWidth,
-                             int DefaultNodeHeight, Color BackGroundColor) {
-        this.numNode = numNode;
+    public void setNodeInitColor(Color nodeInitColor) {
+        this.nodeInitColor = nodeInitColor;
+    }
+
+    public void setNumNeighbour(int numNeighbour) {
         this.numNeighbour = numNeighbour;
-        this.nodeInitColor = DefaultNodeColor;
-        this.backGroundColor = BackGroundColor;
-        this.nodeWidth = DefaultNodeWidth;
-        this.nodeHeight = DefaultNodeHeight;
+    }
+
+    public void setNumNode(int numNode) {
+        this.numNode = numNode;
+    }
+
+    public void setBackGroundColor(Color backGroundColor) {
+        this.backGroundColor = backGroundColor;
     }
 
     private void initNodes(Color color) {
+        nodes.removeAllElements();
         for (int iNode = 0; iNode < this.numNode; iNode++) {
             nodes.add(newNode());
         }
     }
 
-    private void addNode(boolean completeFindLinks) {
+    protected void addNode(boolean completeFindLinks) {
         nodes.add(newNode());
         numNode++;
         if (completeFindLinks)
@@ -61,7 +69,7 @@ public class NodesFrame extends CanvasShell {
 
     }
 
-    private void removeNode(boolean completeFindLinks) {
+    protected void removeNode(boolean completeFindLinks) {
         if (numNode == numNeighbour)
             return;
         Node nodeDel = nodes.get(Utils.random.nextInt(numNode));
@@ -84,15 +92,7 @@ public class NodesFrame extends CanvasShell {
     private Node newNode() {
         Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
                 * SCALE));
-        /*
-         * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
-		 * countNeighbour = 0; countNeighbour < numNeighbour; countNeighbour++) {
-		 * neighbour.add(null); } Node node=new Node(DefaultNodeWidth,
-		 * DefaultNodeHeight, nodeInitColor, location, neighbour);
-		 */
-        Node node = new Node(DefaultNodeWidth, DefaultNodeHeight, nodeInitColor, location);
-        // findLinks(node);
-        return node;
+        return new Node(nodeWidth, nodeHeight, nodeInitColor, location);
     }
 
     @Override
@@ -105,42 +105,13 @@ public class NodesFrame extends CanvasShell {
         drawLinks();
     }
 
-    private void randomNodeColor() {
-        int index = Utils.random.nextInt(numNode);
-        float r = Utils.random.nextFloat();
-        float g = Utils.random.nextFloat();
-        float b = Utils.random.nextFloat();
-        nodes.get(index).color = new Color(r, g, b);
-        spread(index);
-    }
 
-    @Override
-    protected void myTick() {
-        // randomNodeColor();
-        int index = Utils.random.nextInt(numNode);
-        spread(index);
-    }
-
-    private void spread(int index) {
-        Node node = nodes.get(index);
-        for (Node neighbour : nodes.get(index).neighbours) {
-            neighbour.color = node.color;
-        }
-    }
-
-    @Override
-    protected void myRender() {
-        clearScreen();
-        drawNodes();
-        drawLinks();
-    }
-
-    private void clearScreen() {
+    protected void clearScreen() {
         graphics.setColor(backGroundColor);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    private void findLinks() {
+    protected void findLinks() {
         List<JointNode> list;
         for (Node node1 : nodes) {
             list = new ArrayList<JointNode>();
@@ -170,7 +141,7 @@ public class NodesFrame extends CanvasShell {
         }
     }
 
-    private void findLinks(Node node1) {
+    protected void findLinks(Node node1) {
         List<JointNode> list;
 
         list = new ArrayList<JointNode>();
@@ -190,7 +161,7 @@ public class NodesFrame extends CanvasShell {
 
     }
 
-    private void drawNodes() {
+    protected void drawNodes() {
         int x, y;
         int xOffset = DefaultNodeWidth / 2;
         int yOffset = DefaultNodeHeight / 2;
@@ -202,7 +173,7 @@ public class NodesFrame extends CanvasShell {
         }
     }
 
-    private void drawLinks() {
+    protected void drawLinks() {
         int x1, y1, x2, y2;
         for (Node node : nodes) {
             x1 = Math.round(node.location.x);
@@ -216,10 +187,6 @@ public class NodesFrame extends CanvasShell {
         }
     }
 
-    @Override
-    protected void myDebugInfo() {
-
-    }
 
     @Override
     protected void render() {
@@ -229,33 +196,5 @@ public class NodesFrame extends CanvasShell {
         bufferStrategy.show();
     }
 
-    @Override
-    protected void myKeyHandling() {
-        if (keyHandler.x.pressed) {
-            randomNodeColor();
-            keyHandler.x.pressed = false;
-        }
-        if (keyHandler.openBracket.pressed) {
-            removeNode(true);
-            keyHandler.add.pressed = false;
-        }
-        if (keyHandler.closeBracket.pressed) {
-            addNode(true);
-            keyHandler.add.pressed = false;
-        }
-        if (keyHandler.comma.pressed) {
-            removeNode(false);
-            keyHandler.add.pressed = false;
-        }
-        if (keyHandler.period.pressed) {
-            addNode(false);
-            keyHandler.add.pressed = false;
-        }
-    }
-
-    @Override
-    protected void myMouseHandling() {
-
-    }
 
 }
