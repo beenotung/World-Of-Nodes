@@ -34,7 +34,6 @@ public class BackGroundSpreadNodesFrame extends NodesFrame {
 
     @Override
     protected void myDebugInfo() {
-
     }
 
     @Override
@@ -68,7 +67,5 @@ public class BackGroundSpreadNodesFrame extends NodesFrame {
 
     @Override
     protected void myMouseHandling() {
-
     }
-
 }

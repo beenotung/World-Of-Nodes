@@ -66,7 +66,6 @@ public abstract class NodesFrame extends CanvasJFrame {
             findLinks();
         else
             findLinks(nodes.get(nodes.size() - 1));
-
     }
 
     protected void removeNode(boolean completeFindLinks) {
@@ -93,7 +92,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
                 * SCALE));
         /*
-		 * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
+         * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
 		 * ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
 		 * neighbour.add(null); } Node node=new Node(DefaultNodeWidth,
 		 * DefaultNodeHeight, DefaultNodeColor, location, neighbour);
@@ -152,15 +151,12 @@ public abstract class NodesFrame extends CanvasJFrame {
         List<JointNode> list;
         for (Node node1 : nodes) {
             list = new ArrayList<JointNode>();
-
             for (Node node2 : nodes) {
                 if (node1.equals(node2))
                     continue;
-
                 list.add(new JointNode(node1, node2));
             }
             Collections.sort(list);
-
             node1.neighbours = new ArrayList<Node>();
             int index = 0;
             for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
@@ -180,22 +176,17 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     private void findLinks(Node node1) {
         List<JointNode> list;
-
         list = new ArrayList<JointNode>();
-
         for (Node node2 : nodes) {
             if (node1.equals(node2))
                 continue;
-
             list.add(new JointNode(node1, node2));
         }
         Collections.sort(list);
-
         node1.neighbours = new ArrayList<Node>();
         for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
             node1.neighbours.add(list.get(ineighbour).node2);
         }
-
     }
 
     private void drawNodes() {
@@ -226,13 +217,11 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     @Override
     protected void myDebugInfo() {
-
     }
 
     @Override
     protected void render() {
         myRender();
-
         // graphics.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         bufferStrategy.show();
     }
@@ -263,7 +252,5 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     @Override
     protected void myMouseHandling() {
-
     }
-
 }

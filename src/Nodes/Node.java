@@ -34,6 +34,4 @@ public class Node implements Cloneable {
         // return result;
         return (Node) super.clone();
     }
-
-
 }

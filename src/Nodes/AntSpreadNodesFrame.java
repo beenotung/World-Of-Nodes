@@ -41,7 +41,6 @@ public class AntSpreadNodesFrame extends NodesFrame {
 
     @Override
     protected void myDebugInfo() {
-
     }
 
     @Override
@@ -75,7 +74,5 @@ public class AntSpreadNodesFrame extends NodesFrame {
 
     @Override
     protected void myMouseHandling() {
-
     }
-
 }

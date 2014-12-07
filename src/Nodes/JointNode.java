@@ -18,5 +18,4 @@ public class JointNode implements Comparable<JointNode> {
     public int compareTo(JointNode other) {
         return this.distance.compareTo(other.distance);
     }
-
 }
