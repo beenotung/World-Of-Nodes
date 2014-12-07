@@ -62,7 +62,7 @@ public class BackGroundSpreadNodesFrame extends NodesFrame {
 
     private void setRandomNodeColor() {
         Node target = nodes.get(Utils.random.nextInt(numNode));
-        target.color = Colors.getRandomColor();
+        target.color = Colors.getColor();
     }
 
     @Override
