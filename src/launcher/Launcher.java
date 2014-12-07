@@ -3,7 +3,6 @@ package launcher;
 import Nodes.BackGroundSpreadNodesFrame;
 
 import java.awt.*;
-
 public class Launcher {
     public static void main(String[] args) {
         BackGroundSpreadNodesFrame backGroundSpreadNodesFrame = new BackGroundSpreadNodesFrame(0.8, 0.8, 1);

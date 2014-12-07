@@ -10,9 +10,9 @@ Key **[** : remove a node with overview link finding
 
 Key **]** : add a new node with overview link finding
 #
-Key **,** : remove a node with current-view link finding
+Key **,** : remove a node with node-view link finding
 
-Key **.** : add a new node with current-view link finding
+Key **.** : add a new node with node-view link finding
 
 ***
 
