@@ -85,33 +85,70 @@ public abstract class NodesFrame extends CanvasJFrame {
                     node.neighbours.remove(nodeDel);
             }
             nodes.remove(nodeDel);
-            numNode--;
+            Nnode--;
         }
     }
 
     private Node newNode() {
         Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
                 * SCALE));
-        return new Node(nodeWidth, nodeHeight, nodeInitColor, location);
+        /*
+		 * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
+		 * ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
+		 * neighbour.add(null); } Node node=new Node(DefaultNodeWidth,
+		 * DefaultNodeHeight, DefaultNodeColor, location, neighbour);
+		 */
+        Node node = new Node(DefaultNodeWidth, DefaultNodeHeight, DefaultNodeColor, location);
+        // findLinks(node);
+        return node;
     }
 
     @Override
     protected void init() {
         // frame.setResizable(true);
-        initNodes(nodeInitColor);
+        initNodes(DefaultNodeColor);
         findLinks();
         clearScreen();
         drawNodes();
         drawLinks();
     }
 
+    private void randomNodeColor() {
+        int index = Utils.random.nextInt(Nnode);
+        float r = Utils.random.nextFloat();
+        float g = Utils.random.nextFloat();
+        float b = Utils.random.nextFloat();
+        nodes.get(index).color = new Color(r, g, b);
+        spread(index);
+    }
 
-    protected void clearScreen() {
-        graphics.setColor(backGroundColor);
+    @Override
+    protected void myTick() {
+        // randomNodeColor();
+        int index = Utils.random.nextInt(Nnode);
+        spread(index);
+    }
+
+    private void spread(int index) {
+        Node node = nodes.get(index);
+        for (Node neighbour : nodes.get(index).neighbours) {
+            neighbour.color = node.color;
+        }
+    }
+
+    @Override
+    protected void myRender() {
+        clearScreen();
+        drawNodes();
+        drawLinks();
+    }
+
+    private void clearScreen() {
+        graphics.setColor(BackGroundColor);
         graphics.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    protected void findLinks() {
+    private void findLinks() {
         List<JointNode> list;
         for (Node node1 : nodes) {
             list = new ArrayList<JointNode>();
@@ -126,7 +163,7 @@ public abstract class NodesFrame extends CanvasJFrame {
 
             node1.neighbours = new ArrayList<Node>();
             int index = 0;
-            for (int countNeighbour = 0; countNeighbour < numNeighbour; countNeighbour++) {
+            for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
                 while (index != list.size()) {
                     if (list.get(index).node2.neighbours.indexOf(node1) >= 0)
                         index++;
@@ -141,7 +178,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         }
     }
 
-    protected void findLinks(Node node1) {
+    private void findLinks(Node node1) {
         List<JointNode> list;
 
         list = new ArrayList<JointNode>();
@@ -155,13 +192,13 @@ public abstract class NodesFrame extends CanvasJFrame {
         Collections.sort(list);
 
         node1.neighbours = new ArrayList<Node>();
-        for (int countNeighbour = 0; countNeighbour < numNeighbour; countNeighbour++) {
-            node1.neighbours.add(list.get(countNeighbour).node2);
+        for (int ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
+            node1.neighbours.add(list.get(ineighbour).node2);
         }
 
     }
 
-    protected void drawNodes() {
+    private void drawNodes() {
         int x, y;
         int xOffset = DefaultNodeWidth / 2;
         int yOffset = DefaultNodeHeight / 2;
@@ -173,7 +210,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         }
     }
 
-    protected void drawLinks() {
+    private void drawLinks() {
         int x1, y1, x2, y2;
         for (Node node : nodes) {
             x1 = Math.round(node.location.x);
@@ -187,6 +224,10 @@ public abstract class NodesFrame extends CanvasJFrame {
         }
     }
 
+    @Override
+    protected void myDebugInfo() {
+
+    }
 
     @Override
     protected void render() {
@@ -196,5 +237,33 @@ public abstract class NodesFrame extends CanvasJFrame {
         bufferStrategy.show();
     }
 
+    @Override
+    protected void myKeyHandling() {
+        if (keyHandler.x.pressed) {
+            randomNodeColor();
+            keyHandler.x.pressed = false;
+        }
+        if (keyHandler.openBracket.pressed) {
+            removeNode(true);
+            keyHandler.add.pressed = false;
+        }
+        if (keyHandler.closeBracket.pressed) {
+            addNode(true);
+            keyHandler.add.pressed = false;
+        }
+        if (keyHandler.comma.pressed) {
+            removeNode(false);
+            keyHandler.add.pressed = false;
+        }
+        if (keyHandler.period.pressed) {
+            addNode(false);
+            keyHandler.add.pressed = false;
+        }
+    }
+
+    @Override
+    protected void myMouseHandling() {
+
+    }
 
 }
