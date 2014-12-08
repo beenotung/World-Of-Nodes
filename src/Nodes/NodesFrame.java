@@ -14,7 +14,6 @@ public abstract class NodesFrame extends CanvasJFrame {
     public static final String APPLICATION_NAME = "NodesFrame";
     public static final String VERSION = "2.0.0";
     public static final String APP_NAME = APPLICATION_NAME + " " + VERSION;
-    private static final long serialVersionUID = 1L;
     private static final double DEFAULT_NS_PER_TICK = 1e9D / 60D;
     private static final double DEFAULT_NS_PER_RENDER = 1e9D / 30D;
     private static final int DefaultNodeWidth = 10;
@@ -26,7 +25,7 @@ public abstract class NodesFrame extends CanvasJFrame {
     protected Vector<Node> nodes = new Vector<>();
     protected int nodeWidth, nodeHeight;
     private int numNeighbour;
-    private Color nodeInitColor, backGroundColor;
+    private Color nodeInitColor;
 
     public NodesFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
         super(width, height, scale, title, nsPerTick, nsPerRender);
