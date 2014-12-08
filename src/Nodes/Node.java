@@ -16,7 +16,7 @@ public class Node implements Cloneable {
         this.height = height;
         this.color = color;
         this.location = location;
-        neighbours = new ArrayList<Node>();
+        neighbours = new ArrayList<>();
     }
 
     public Node(int width, int height, Color color, Vector2D location, ArrayList<Node> neighbours) {

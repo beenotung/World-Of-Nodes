@@ -23,7 +23,7 @@ public abstract class NodesFrame extends CanvasJFrame {
     private static final Color DefaultBackGroundColor = Color.black;
     private static Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
     protected int numNode;
-    protected Vector<Node> nodes = new Vector<Node>();
+    protected Vector<Node> nodes = new Vector<>();
     protected int nodeWidth, nodeHeight;
     private int numNeighbour;
     private Color nodeInitColor, backGroundColor;
@@ -92,12 +92,6 @@ public abstract class NodesFrame extends CanvasJFrame {
     private Node newNode() {
         Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
                 * SCALE));
-        /*
-         * ArrayList<Node> neighbour = new ArrayList<Node>(); for (int
-		 * ineighbour = 0; ineighbour < Nneighbour; ineighbour++) {
-		 * neighbour.add(null); } Node node=new Node(DefaultNodeWidth,
-		 * DefaultNodeHeight, DefaultNodeColor, location, neighbour);
-		 */
         Node node = new Node(DefaultNodeWidth, DefaultNodeHeight, DefaultNodeInitColor, location);
         // findLinks(node);
         return node;
@@ -151,24 +145,24 @@ public abstract class NodesFrame extends CanvasJFrame {
     private void findLinks() {
         List<JointNode> list;
         for (Node node1 : nodes) {
-            list = new ArrayList<JointNode>();
+            list = new ArrayList<>();
             for (Node node2 : nodes) {
                 if (node1.equals(node2))
                     continue;
                 list.add(new JointNode(node1, node2));
             }
             Collections.sort(list);
-            node1.neighbours = new ArrayList<Node>();
+            node1.neighbours = new ArrayList<>();
             int index = 0;
-            for (int ineighbour = 0; ineighbour < numNeighbour; ineighbour++) {
+            for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
                 while (index != list.size()) {
-                    if (list.get(index).node2.neighbours.indexOf(node1) >= 0)
+                    if (list.get(index).destNode.neighbours.indexOf(node1) >= 0)
                         index++;
                     else
                         break;
                 }
                 if (index != list.size()) {
-                    node1.neighbours.add(list.get(index).node2);
+                    node1.neighbours.add(list.get(index).destNode);
                     index++;
                 }
             }
@@ -177,16 +171,16 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     private void findLinks(Node node1) {
         List<JointNode> list;
-        list = new ArrayList<JointNode>();
+        list = new ArrayList<>();
         for (Node node2 : nodes) {
             if (node1.equals(node2))
                 continue;
             list.add(new JointNode(node1, node2));
         }
         Collections.sort(list);
-        node1.neighbours = new ArrayList<Node>();
-        for (int ineighbour = 0; ineighbour < numNeighbour; ineighbour++) {
-            node1.neighbours.add(list.get(ineighbour).node2);
+        node1.neighbours = new ArrayList<>();
+        for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
+            node1.neighbours.add(list.get(iNeighbour).destNode);
         }
     }
 
