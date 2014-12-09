@@ -1,6 +1,7 @@
 package worldofnodes.gui;
 
 import myutils.Utils;
+import myutils.Vector2D;
 import myutils.gui.Colors;
 import worldofnodes.core.Node;
 
@@ -87,5 +88,29 @@ public class AntSpreadNodesFrame extends NodesFrame {
 
     @Override
     protected void myMouseHandling() {
+        Vector2D location = mouseHandler.left.locationRaw;
+        boolean state = mouseHandler.left.clicked;
+        if (state) {
+            System.out.print("\nclicked on: ");
+            System.out.println(location.toString());
+            mouseHandler.left.clicked = false;
+            Node node = getNearestNode(location);
+            System.out.println("closest node: " + node.toString());
+        }
+    }
+
+    private Node getNearestNode(Vector2D location) {
+        if (nodes.size() == 0) return null;
+        Node closestNode = nodes.firstElement();
+        double closestDistance = Vector2D.Distance(closestNode.location, location);
+        double deltaDistance;
+        for (Node node : nodes) {
+            deltaDistance = Vector2D.Distance(node.location, location);
+            if (deltaDistance < closestDistance) {
+                closestNode = node;
+                closestDistance = deltaDistance;
+            }
+        }
+        return closestNode;
     }
 }
