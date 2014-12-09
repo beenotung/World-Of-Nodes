@@ -1,7 +1,8 @@
-package Nodes;
+package worldofnodes.gui;
 
 import myutils.Utils;
 import myutils.gui.Colors;
+import worldofnodes.core.Node;
 
 /**
  * Created by beenotung on 12/5/14.
@@ -35,6 +36,7 @@ public class BackGroundSpreadNodesFrame extends NodesFrame {
     @Override
     protected void myDebugInfo() {
     }
+
 
     @Override
     protected void myKeyHandling() {

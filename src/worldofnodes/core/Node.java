@@ -1,4 +1,4 @@
-package Nodes;
+package worldofnodes.core;
 
 import myutils.Vector2D;
 

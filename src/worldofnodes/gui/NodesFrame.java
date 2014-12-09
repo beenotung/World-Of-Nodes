@@ -1,8 +1,10 @@
-package Nodes;
+package worldofnodes.gui;
 
 import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.CanvasJFrame;
+import worldofnodes.core.JointNode;
+import worldofnodes.core.Node;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,11 +50,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         this.numNode = numNode;
     }
 
-    public void setBackGroundColor(Color backGroundColor) {
-        this.backGroundColor = backGroundColor;
-    }
-
-    private void initNodes(Color color) {
+    protected void initNodes(Color color) {
         nodes.removeAllElements();
         for (int iNode = 0; iNode < this.numNode; iNode++) {
             nodes.add(newNode());
@@ -136,11 +134,6 @@ public abstract class NodesFrame extends CanvasJFrame {
         drawLinks();
     }
 
-    protected void clearScreen() {
-        graphics.setColor(backGroundColor);
-        graphics.fillRect(0, 0, WIDTH, HEIGHT);
-    }
-
     private void findLinks() {
         List<JointNode> list;
         for (Node node1 : nodes) {
@@ -209,42 +202,16 @@ public abstract class NodesFrame extends CanvasJFrame {
         }
     }
 
-    @Override
-    protected void myDebugInfo() {
+    protected void render_CanvasJFrame() {
+        super.render();
     }
 
     @Override
     protected void render() {
+        //super.render();
         myRender();
         // graphics.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         bufferStrategy.show();
     }
 
-    @Override
-    protected void myKeyHandling() {
-        if (keyHandler.x.pressed) {
-            randomNodeColor();
-            keyHandler.x.pressed = false;
-        }
-        if (keyHandler.openBracket.pressed) {
-            removeNode(true);
-            keyHandler.add.pressed = false;
-        }
-        if (keyHandler.closeBracket.pressed) {
-            addNode(true);
-            keyHandler.add.pressed = false;
-        }
-        if (keyHandler.comma.pressed) {
-            removeNode(false);
-            keyHandler.add.pressed = false;
-        }
-        if (keyHandler.period.pressed) {
-            addNode(false);
-            keyHandler.add.pressed = false;
-        }
-    }
-
-    @Override
-    protected void myMouseHandling() {
-    }
 }
