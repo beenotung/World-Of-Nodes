@@ -176,15 +176,25 @@ public abstract class NodesFrame extends CanvasJFrame {
         }
     }
 
+    public final void drawCircle(Color color, int x, int y, int radius) {
+        graphics.setColor(color);
+        graphics.fillOval(x, y, radius, radius);
+    }
+
+    public final void drawOval(Color color, int x, int y, int width, int height) {
+        graphics.setColor(color);
+        graphics.fillOval(x, y, width, height);
+    }
+
     protected void drawNodes() {
-        int x, y;
-        int xOffset = DefaultNodeWidth / 2;
-        int yOffset = DefaultNodeHeight / 2;
+        int x, y, xOffset, yOffset;
         for (Node node : nodes) {
             x = Math.round(node.location.x);
             y = Math.round(node.location.y);
+            xOffset = node.width / 2;
+            yOffset = node.height / 2;
             graphics.setColor(node.color);
-            graphics.fillOval(x - xOffset, y - yOffset, DefaultNodeWidth, DefaultNodeHeight);
+            graphics.fillOval(x - xOffset, y - yOffset, node.width, node.height);
         }
     }
 

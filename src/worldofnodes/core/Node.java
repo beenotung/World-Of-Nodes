@@ -1,5 +1,6 @@
 package worldofnodes.core;
 
+import myutils.Utils;
 import myutils.Vector2D;
 
 import java.awt.*;
@@ -33,5 +34,12 @@ public class Node implements Cloneable {
         // this.neighbours.clone());
         // return result;
         return (Node) super.clone();
+    }
+
+    public Node getRandomNeighbours() {
+        if (neighbours.size() == 0)
+            return null;
+        else
+            return neighbours.get(Utils.random.nextInt(neighbours.size()));
     }
 }
