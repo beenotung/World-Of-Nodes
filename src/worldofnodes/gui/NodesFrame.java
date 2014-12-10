@@ -26,7 +26,7 @@ public abstract class NodesFrame extends CanvasJFrame {
     protected int numNode;
     protected Vector<Node> nodes = new Vector<>();
     protected int nodeWidth, nodeHeight;
-    private int numNeighbour;
+    protected int numNeighbour;
     private Color nodeInitColor;
 
     public NodesFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
@@ -48,6 +48,10 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     public void setNumNode(int numNode) {
         this.numNode = numNode;
+    }
+
+    protected void initNodes() {
+        initNodes(DefaultNodeInitColor);
     }
 
     protected void initNodes(Color color) {
@@ -97,7 +101,7 @@ public abstract class NodesFrame extends CanvasJFrame {
     @Override
     protected void init() {
         // frame.setResizable(true);
-        initNodes(DefaultNodeInitColor);
+        initNodes();
         findLinks();
         clearScreen();
         drawNodes();
@@ -134,7 +138,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         drawLinks();
     }
 
-    private void findLinks() {
+    protected void findLinks() {
         List<JointNode> list;
         for (Node node1 : nodes) {
             list = new ArrayList<>();
@@ -161,7 +165,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         }
     }
 
-    private void findLinks(Node node1) {
+    protected void findLinks(Node node1) {
         List<JointNode> list;
         list = new ArrayList<>();
         for (Node node2 : nodes) {

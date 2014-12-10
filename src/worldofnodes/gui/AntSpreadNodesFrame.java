@@ -4,8 +4,12 @@ import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.Colors;
 import worldofnodes.core.Ant;
+import worldofnodes.core.JointNode;
 import worldofnodes.core.Node;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -47,7 +51,7 @@ public class AntSpreadNodesFrame extends NodesFrame {
     protected void myTick() {
         //setRandomNodeColor();
         int index = Utils.random.nextInt(numNode);
-        spread(index);
+        //spread(index);
         for (Ant ant : ants)
             ant.tick();
     }
@@ -56,12 +60,57 @@ public class AntSpreadNodesFrame extends NodesFrame {
     protected void init() {
         setNumNode(DEFAULT_NUM_NODE);
         setNumNeighbour(DEFAULT_NUM_NEIGHBOUR);
+        initNodes();
+        findLinks();
         int b = 80;
         int g = (int) Math.round(b * 1.5);
         int r = (int) Math.round(g * 1.5);
         setBackground(Colors.getColor(new Colors.RGB(r, g, b)));
         render_CanvasJFrame();
-        super.init();
+    }
+
+    protected void findLinks() {
+        List<JointNode> list;
+        for (Node node1 : nodes) {
+            node1.neighbours = new ArrayList<>();
+        }
+        for (Node node1 : nodes) {
+            list = new ArrayList<>();
+            for (Node node2 : nodes) {
+                if (node1.equals(node2))
+                    continue;
+                list.add(new JointNode(node1, node2));
+            }
+            Collections.sort(list);
+            int index = 0;
+            for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
+                while (index != list.size()) {
+                    if (list.get(index).destNode.neighbours.indexOf(node1) >= 0)
+                        index++;
+                    else
+                        break;
+                }
+                if (index != list.size()) {
+                    node1.neighbours.add(list.get(index).destNode);
+                    index++;
+                }
+            }
+        }
+    }
+
+    protected void findLinks(Node node1) {
+        List<JointNode> list;
+        list = new ArrayList<>();
+        for (Node node2 : nodes) {
+            if (node1.equals(node2))
+                continue;
+            list.add(new JointNode(node1, node2));
+        }
+        Collections.sort(list);
+        for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
+            node1.neighbours.add(list.get(iNeighbour).destNode);
+            list.get(iNeighbour).destNode.neighbours.add(node1);
+        }
     }
 
     protected void spread(int index) {
