@@ -4,15 +4,15 @@
 
 Key **q** : quit the program
 #
-Key **x** : set a random node into random color and spread its neighbour(s)
+Key **x** : set a random vertex into random color and spread its neighbour(s)
 #
-Key **[** : remove a node with overview link finding
+Key **[** : remove a vertex with overview link finding
 
-Key **]** : add a new node with overview link finding
+Key **]** : add a new vertex with overview link finding
 #
-Key **,** : remove a node with node-view link finding
+Key **,** : remove a vertex with vertex-view link finding
 
-Key **.** : add a new node with node-view link finding
+Key **.** : add a new vertex with vertex-view link finding
 
 ***
 

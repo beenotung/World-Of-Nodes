@@ -2,13 +2,13 @@ package worldofnodes.gui;
 
 import myutils.Utils;
 import myutils.gui.Colors;
-import worldofnodes.core.Node;
+import worldofnodes.core.graph.Vertex;
 
 /**
  * Created by beenotung on 12/5/14.
  */
-public class BackGroundSpreadNodesFrame extends NodesFrame {
-    public BackGroundSpreadNodesFrame(double widthRate, double heightRate, int scale) {
+public class BackGroundSpreadGraphJFrame extends GraphJFrame {
+    public BackGroundSpreadGraphJFrame(double widthRate, double heightRate, int scale) {
         super(widthRate, heightRate, scale);
     }
 
@@ -27,9 +27,9 @@ public class BackGroundSpreadNodesFrame extends NodesFrame {
     }
 
     protected void spread(int index) {
-        Node node = nodes.get(index);
-        for (Node neighbour : nodes.get(index).neighbours) {
-            neighbour.color = node.color;
+        Vertex vertex = vertexes.get(index);
+        for (Vertex neighbour : vertexes.get(index).neighbours) {
+            neighbour.color = vertex.color;
         }
     }
 
@@ -63,7 +63,7 @@ public class BackGroundSpreadNodesFrame extends NodesFrame {
     }
 
     private void setRandomNodeColor() {
-        Node target = nodes.get(Utils.random.nextInt(numNode));
+        Vertex target = vertexes.get(Utils.random.nextInt(numNode));
         target.color = Colors.getColor();
     }
 

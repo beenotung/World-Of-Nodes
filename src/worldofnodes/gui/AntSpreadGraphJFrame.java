@@ -3,9 +3,9 @@ package worldofnodes.gui;
 import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.Colors;
-import worldofnodes.core.Ant;
-import worldofnodes.core.JointNode;
-import worldofnodes.core.Node;
+import worldofnodes.core.animal.Ant;
+import worldofnodes.core.graph.Edge;
+import worldofnodes.core.graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +15,7 @@ import java.util.Vector;
 /**
  * Created by beenotung on 12/5/14.
  */
-public class AntSpreadNodesFrame extends NodesFrame {
+public class AntSpreadGraphJFrame extends GraphJFrame {
     public static final String APPLICATION_NAME = "Ant Spread Nodes";
     public static final String VERSION = "1.0.0";
     public static final String APP_NAME = APPLICATION_NAME + " " + VERSION;
@@ -23,7 +23,7 @@ public class AntSpreadNodesFrame extends NodesFrame {
     private static final int DEFAULT_NUM_NEIGHBOUR = 4;
     protected Vector<Ant> ants = new Vector<>();
 
-    public AntSpreadNodesFrame(double widthRate, double heightRate, int scale) {
+    public AntSpreadGraphJFrame(double widthRate, double heightRate, int scale) {
         super(widthRate, heightRate, scale);
         frame.setTitle(APP_NAME);
     }
@@ -56,6 +56,7 @@ public class AntSpreadNodesFrame extends NodesFrame {
             ant.tick();
     }
 
+
     @Override
     protected void init() {
         setNumNode(DEFAULT_NUM_NODE);
@@ -70,53 +71,53 @@ public class AntSpreadNodesFrame extends NodesFrame {
     }
 
     protected void findLinks() {
-        List<JointNode> list;
-        for (Node node1 : nodes) {
-            node1.neighbours = new ArrayList<>();
+        List<Edge> list;
+        for (Vertex vertex1 : vertexes) {
+            vertex1.neighbours = new ArrayList<>();
         }
-        for (Node node1 : nodes) {
+        for (Vertex vertex1 : vertexes) {
             list = new ArrayList<>();
-            for (Node node2 : nodes) {
-                if (node1.equals(node2))
+            for (Vertex vertex2 : vertexes) {
+                if (vertex1.equals(vertex2))
                     continue;
-                list.add(new JointNode(node1, node2));
+                list.add(new Edge(vertex1, vertex2));
             }
             Collections.sort(list);
             int index = 0;
             for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
                 while (index != list.size()) {
-                    if (list.get(index).destNode.neighbours.indexOf(node1) >= 0)
+                    if (list.get(index).destVertex.neighbours.indexOf(vertex1) >= 0)
                         index++;
                     else
                         break;
                 }
                 if (index != list.size()) {
-                    node1.neighbours.add(list.get(index).destNode);
+                    vertex1.neighbours.add(list.get(index).destVertex);
                     index++;
                 }
             }
         }
     }
 
-    protected void findLinks(Node node1) {
-        List<JointNode> list;
+    protected void findLinks(Vertex vertex1) {
+        List<Edge> list;
         list = new ArrayList<>();
-        for (Node node2 : nodes) {
-            if (node1.equals(node2))
+        for (Vertex vertex2 : vertexes) {
+            if (vertex1.equals(vertex2))
                 continue;
-            list.add(new JointNode(node1, node2));
+            list.add(new Edge(vertex1, vertex2));
         }
         Collections.sort(list);
         for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
-            node1.neighbours.add(list.get(iNeighbour).destNode);
-            list.get(iNeighbour).destNode.neighbours.add(node1);
+            vertex1.neighbours.add(list.get(iNeighbour).destVertex);
+            list.get(iNeighbour).destVertex.neighbours.add(vertex1);
         }
     }
 
     protected void spread(int index) {
-        Node node = nodes.get(index);
-        for (Node neighbour : nodes.get(index).neighbours) {
-            neighbour.color = node.color;
+        Vertex vertex = vertexes.get(index);
+        for (Vertex neighbour : vertexes.get(index).neighbours) {
+            neighbour.color = vertex.color;
         }
     }
 
@@ -149,7 +150,7 @@ public class AntSpreadNodesFrame extends NodesFrame {
     }
 
     private void setRandomNodeColor() {
-        Node target = nodes.get(Utils.random.nextInt(numNode));
+        Vertex target = vertexes.get(Utils.random.nextInt(numNode));
         target.color = Colors.getColor();
     }
 
@@ -161,28 +162,29 @@ public class AntSpreadNodesFrame extends NodesFrame {
             System.out.print("\nclicked on: ");
             System.out.println(location.toString());
             mouseHandler.left.clicked = false;
-            Node clickedNode = getNearestNode(location);
-            addAnt(clickedNode);
-            System.out.println("closest node: " + clickedNode.toString());
+            Vertex clickedVertex = getNearestNode(location);
+            for (int i = 0; i < 50; i++)
+                addAnt(clickedVertex);
+            System.out.println("closest node: " + clickedVertex.toString());
         }
     }
 
-    private void addAnt(Node srcNode) {
-        ants.add(new Ant(srcNode));
+    private void addAnt(Vertex srcVertex) {
+        ants.add(new Ant(srcVertex));
     }
 
-    private Node getNearestNode(Vector2D location) {
-        if (nodes.size() == 0) return null;
-        Node closestNode = nodes.firstElement();
-        double closestDistance = Vector2D.Distance(closestNode.location, location);
+    private Vertex getNearestNode(Vector2D location) {
+        if (vertexes.size() == 0) return null;
+        Vertex closestVertex = vertexes.firstElement();
+        double closestDistance = Vector2D.Distance(closestVertex.location, location);
         double deltaDistance;
-        for (Node node : nodes) {
-            deltaDistance = Vector2D.Distance(node.location, location);
+        for (Vertex vertex : vertexes) {
+            deltaDistance = Vector2D.Distance(vertex.location, location);
             if (deltaDistance < closestDistance) {
-                closestNode = node;
+                closestVertex = vertex;
                 closestDistance = deltaDistance;
             }
         }
-        return closestNode;
+        return closestVertex;
     }
 }

@@ -3,8 +3,8 @@ package worldofnodes.gui;
 import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.CanvasJFrame;
-import worldofnodes.core.JointNode;
-import worldofnodes.core.Node;
+import worldofnodes.core.graph.Edge;
+import worldofnodes.core.graph.Vertex;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-public abstract class NodesFrame extends CanvasJFrame {
-    public static final String APPLICATION_NAME = "NodesFrame";
+public abstract class GraphJFrame extends CanvasJFrame {
+    public static final String APPLICATION_NAME = "GraphJFrame";
     public static final String VERSION = "2.0.0";
     public static final String APP_NAME = APPLICATION_NAME + " " + VERSION;
     private static final double DEFAULT_NS_PER_TICK = 1e9D / 60D;
@@ -24,17 +24,17 @@ public abstract class NodesFrame extends CanvasJFrame {
     private static final Color DefaultBackGroundColor = Color.black;
     private static Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
     protected int numNode;
-    protected Vector<Node> nodes = new Vector<>();
+    protected Vector<Vertex> vertexes = new Vector<>();
     protected int nodeWidth, nodeHeight;
     protected int numNeighbour;
     private Color nodeInitColor;
 
-    public NodesFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
+    public GraphJFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
         super(width, height, scale, title, nsPerTick, nsPerRender);
         frame.setTitle(APP_NAME);
     }
 
-    public NodesFrame(double widthRate, double heightRate, int scale) {
+    public GraphJFrame(double widthRate, double heightRate, int scale) {
         super((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, APP_NAME, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
     }
 
@@ -55,47 +55,47 @@ public abstract class NodesFrame extends CanvasJFrame {
     }
 
     protected void initNodes(Color color) {
-        nodes.removeAllElements();
+        vertexes.removeAllElements();
         for (int iNode = 0; iNode < this.numNode; iNode++) {
-            nodes.add(newNode());
+            vertexes.add(newNode());
         }
     }
 
     protected void addNode(boolean completeFindLinks) {
-        nodes.add(newNode());
+        vertexes.add(newNode());
         numNode++;
         if (completeFindLinks)
             findLinks();
         else
-            findLinks(nodes.get(nodes.size() - 1));
+            findLinks(vertexes.get(vertexes.size() - 1));
     }
 
     protected void removeNode(boolean completeFindLinks) {
         if (numNode == numNeighbour)
             return;
-        Node nodeDel = nodes.get(Utils.random.nextInt(numNode));
+        Vertex vertexDel = vertexes.get(Utils.random.nextInt(numNode));
         if (completeFindLinks) {
-            nodes.remove(nodeDel);
+            vertexes.remove(vertexDel);
             numNode--;
             findLinks();
         } else {
-            for (Node node : nodes) {
-                if (node.equals(nodeDel))
+            for (Vertex vertex : vertexes) {
+                if (vertex.equals(vertexDel))
                     continue;
-                if (node.neighbours.contains(nodeDel))
-                    node.neighbours.remove(nodeDel);
+                if (vertex.neighbours.contains(vertexDel))
+                    vertex.neighbours.remove(vertexDel);
             }
-            nodes.remove(nodeDel);
+            vertexes.remove(vertexDel);
             numNode--;
         }
     }
 
-    private Node newNode() {
+    private Vertex newNode() {
         Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
                 * SCALE));
-        Node node = new Node(DefaultNodeWidth, DefaultNodeHeight, DefaultNodeInitColor, location);
-        // findLinks(node);
-        return node;
+        Vertex vertex = new Vertex(DefaultNodeWidth, DefaultNodeHeight, DefaultNodeInitColor, location);
+        // findLinks(vertex);
+        return vertex;
     }
 
     @Override
@@ -113,7 +113,7 @@ public abstract class NodesFrame extends CanvasJFrame {
         float r = Utils.random.nextFloat();
         float g = Utils.random.nextFloat();
         float b = Utils.random.nextFloat();
-        nodes.get(index).color = new Color(r, g, b);
+        vertexes.get(index).color = new Color(r, g, b);
         spread(index);
     }
 
@@ -125,9 +125,9 @@ public abstract class NodesFrame extends CanvasJFrame {
     }
 
     private void spread(int index) {
-        Node node = nodes.get(index);
-        for (Node neighbour : nodes.get(index).neighbours) {
-            neighbour.color = node.color;
+        Vertex vertex = vertexes.get(index);
+        for (Vertex neighbour : vertexes.get(index).neighbours) {
+            neighbour.color = vertex.color;
         }
     }
 
@@ -139,44 +139,44 @@ public abstract class NodesFrame extends CanvasJFrame {
     }
 
     protected void findLinks() {
-        List<JointNode> list;
-        for (Node node1 : nodes) {
+        List<Edge> list;
+        for (Vertex vertex1 : vertexes) {
             list = new ArrayList<>();
-            for (Node node2 : nodes) {
-                if (node1.equals(node2))
+            for (Vertex vertex2 : vertexes) {
+                if (vertex1.equals(vertex2))
                     continue;
-                list.add(new JointNode(node1, node2));
+                list.add(new Edge(vertex1, vertex2));
             }
             Collections.sort(list);
-            node1.neighbours = new ArrayList<>();
+            vertex1.neighbours = new ArrayList<>();
             int index = 0;
             for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
                 while (index != list.size()) {
-                    if (list.get(index).destNode.neighbours.indexOf(node1) >= 0)
+                    if (list.get(index).destVertex.neighbours.indexOf(vertex1) >= 0)
                         index++;
                     else
                         break;
                 }
                 if (index != list.size()) {
-                    node1.neighbours.add(list.get(index).destNode);
+                    vertex1.neighbours.add(list.get(index).destVertex);
                     index++;
                 }
             }
         }
     }
 
-    protected void findLinks(Node node1) {
-        List<JointNode> list;
+    protected void findLinks(Vertex vertex1) {
+        List<Edge> list;
         list = new ArrayList<>();
-        for (Node node2 : nodes) {
-            if (node1.equals(node2))
+        for (Vertex vertex2 : vertexes) {
+            if (vertex1.equals(vertex2))
                 continue;
-            list.add(new JointNode(node1, node2));
+            list.add(new Edge(vertex1, vertex2));
         }
         Collections.sort(list);
-        node1.neighbours = new ArrayList<>();
+        vertex1.neighbours = new ArrayList<>();
         for (int iNeighbour = 0; iNeighbour < numNeighbour; iNeighbour++) {
-            node1.neighbours.add(list.get(iNeighbour).destNode);
+            vertex1.neighbours.add(list.get(iNeighbour).destVertex);
         }
     }
 
@@ -192,23 +192,23 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     protected void drawNodes() {
         int x, y, xOffset, yOffset;
-        for (Node node : nodes) {
-            x = Math.round(node.location.x);
-            y = Math.round(node.location.y);
-            xOffset = node.width / 2;
-            yOffset = node.height / 2;
-            graphics.setColor(node.color);
-            graphics.fillOval(x - xOffset, y - yOffset, node.width, node.height);
+        for (Vertex vertex : vertexes) {
+            x = Math.round(vertex.location.x);
+            y = Math.round(vertex.location.y);
+            xOffset = vertex.width / 2;
+            yOffset = vertex.height / 2;
+            graphics.setColor(vertex.color);
+            graphics.fillOval(x - xOffset, y - yOffset, vertex.width, vertex.height);
         }
     }
 
     protected void drawLinks() {
         int x1, y1, x2, y2;
-        for (Node node : nodes) {
-            x1 = Math.round(node.location.x);
-            y1 = Math.round(node.location.y);
-            graphics.setColor(node.color);
-            for (Node neighbour : node.neighbours) {
+        for (Vertex vertex : vertexes) {
+            x1 = Math.round(vertex.location.x);
+            y1 = Math.round(vertex.location.y);
+            graphics.setColor(vertex.color);
+            for (Vertex neighbour : vertex.neighbours) {
                 x2 = Math.round(neighbour.location.x);
                 y2 = Math.round(neighbour.location.y);
                 graphics.drawLine(x1, y1, x2, y2);
@@ -222,7 +222,7 @@ public abstract class NodesFrame extends CanvasJFrame {
 
     @Override
     protected void render() {
-        //super.render();
+        super.render();
         myRender();
         // graphics.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         bufferStrategy.show();

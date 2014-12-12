@@ -1,6 +1,7 @@
-package worldofnodes.core;
+package worldofnodes.core.animal;
 
 import myutils.Vector2D;
+import worldofnodes.core.graph.Vertex;
 
 import java.awt.*;
 
@@ -15,7 +16,7 @@ public class Ant {
     public static final Color DEFAULT_COLOR = Color.red;
     public String state;
     public Vector2D location, velocity;
-    public Node destNode, srcNode;
+    public Vertex destVertex, srcVertex;
     public Color color;
     public int width, height;
 
@@ -27,21 +28,21 @@ public class Ant {
         state = STATE_ARRIVED;
     }
 
-    public Ant(Node srcNode) {
+    public Ant(Vertex srcVertex) {
         this();
-        this.srcNode = srcNode;
-        location = srcNode.location.clone();
+        this.srcVertex = srcVertex;
+        location = srcVertex.location.clone();
     }
 
     public void tick() {
         switch (state) {
             case STATE_ARRIVED:
-                destNode = srcNode.getRandomNeighbours();
+                destVertex = srcVertex.getRandomNeighbours();
                 state = STATE_MOVING;
                 break;
             case STATE_MOVING:
                 velocity
-                        = Vector2D.subtract(destNode.location, location);
+                        = Vector2D.subtract(destVertex.location, location);
                 velocity.max(1f);
                 if (velocity.getMagnitude() == 0) state = STATE_ARRIVED;
                 location = location.add(location, velocity);
