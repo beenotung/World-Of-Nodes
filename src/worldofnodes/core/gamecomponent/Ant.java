@@ -1,4 +1,4 @@
-package worldofnodes.core.animal;
+package worldofnodes.core.gamecomponent;
 
 import myutils.Vector2D;
 import worldofnodes.core.graph.Vertex;

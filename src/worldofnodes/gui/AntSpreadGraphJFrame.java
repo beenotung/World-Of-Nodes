@@ -3,7 +3,7 @@ package worldofnodes.gui;
 import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.Colors;
-import worldofnodes.core.animal.Ant;
+import worldofnodes.core.gamecomponent.Ant;
 import worldofnodes.core.graph.Edge;
 import worldofnodes.core.graph.Vertex;
 

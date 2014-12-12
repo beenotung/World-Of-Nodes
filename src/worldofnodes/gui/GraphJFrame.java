@@ -4,6 +4,7 @@ import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.CanvasJFrame;
 import worldofnodes.core.graph.Edge;
+import worldofnodes.core.graph.Graph;
 import worldofnodes.core.graph.Vertex;
 
 import java.awt.*;
@@ -24,6 +25,7 @@ public abstract class GraphJFrame extends CanvasJFrame {
     private static final Color DefaultBackGroundColor = Color.black;
     private static Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
     protected int numNode;
+    protected Graph graph;
     protected Vector<Vertex> vertexes = new Vector<>();
     protected int nodeWidth, nodeHeight;
     protected int numNeighbour;
@@ -32,10 +34,11 @@ public abstract class GraphJFrame extends CanvasJFrame {
     public GraphJFrame(int width, int height, int scale, String title, double nsPerTick, double nsPerRender) {
         super(width, height, scale, title, nsPerTick, nsPerRender);
         frame.setTitle(APP_NAME);
+        graph = new Graph();
     }
 
     public GraphJFrame(double widthRate, double heightRate, int scale) {
-        super((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, APP_NAME, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
+        this((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, APP_NAME, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
     }
 
     public void setNodeInitColor(Color nodeInitColor) {
@@ -58,6 +61,7 @@ public abstract class GraphJFrame extends CanvasJFrame {
         vertexes.removeAllElements();
         for (int iNode = 0; iNode < this.numNode; iNode++) {
             vertexes.add(newNode());
+            graph.generateVertex()
         }
     }
 
@@ -101,6 +105,7 @@ public abstract class GraphJFrame extends CanvasJFrame {
     @Override
     protected void init() {
         // frame.setResizable(true);
+        graph.initRandomly();
         initNodes();
         findLinks();
         clearScreen();
