@@ -1,6 +1,7 @@
 package worldofnodes.core.gamecomponent;
 
 import myutils.Vector2D;
+import myutils.maths.graph.Graph;
 import myutils.maths.graph.Vertex;
 
 import java.awt.*;
@@ -19,17 +20,18 @@ public class Ant {
     public Vertex destVertex, srcVertex;
     public Color color;
     public int width, height;
+    private Graph graph;
 
-    public Ant() {
-        super();
+    private Ant(Graph graph) {
+        this.graph=graph;
         width = DEFAULT_WIDTH;
         height = DEFAULT_HEIGHT;
         color = DEFAULT_COLOR;
         state = STATE_ARRIVED;
     }
 
-    public Ant(Vertex srcVertex) {
-        this();
+    public Ant(Graph graph,Vertex srcVertex) {
+        this(graph);
         this.srcVertex = srcVertex;
         location = srcVertex.location.clone();
     }
@@ -37,7 +39,9 @@ public class Ant {
     public void tick() {
         switch (state) {
             case STATE_ARRIVED:
-                destVertex = srcVertex.getRandomNeighbours();
+                destVertex =
+                        srcVertex.
+                        graph.edgeManager.getNeighbours(srcVertex);
                 state = STATE_MOVING;
                 break;
             case STATE_MOVING:

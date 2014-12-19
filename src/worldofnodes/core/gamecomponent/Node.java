@@ -20,9 +20,7 @@ public class Node {
     }
 
     public Node(float radius, Color color, Vertex location, ArrayList<Node> neighbours) {
-        this.radius = radius;
-        this.color = color;
-        this.location = location;
+       this(radius,color,location);
         this.neighbours = neighbours;
     }
     
