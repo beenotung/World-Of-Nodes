@@ -1,4 +1,4 @@
-package worldofnodes.core.graph;
+package worldofnodes.core.gamecomponent;
 
 import myutils.Utils;
 import myutils.Vector2D;
@@ -6,13 +6,13 @@ import myutils.Vector2D;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Vertex implements Cloneable {
-    public Vector2D location;
-    public ArrayList<Vertex> neighbours;
+public class Node implements Cloneable {
+        public Vector2D location;
+    public ArrayList<Node> neighbours;
     public Color color;
     public int width, height;
 
-    public Vertex(int width, int height, Color color, Vector2D location) {
+    public Node(int width, int height, Color color, Vector2D location) {
         this.width = width;
         this.height = height;
         this.color = color;
@@ -20,7 +20,7 @@ public class Vertex implements Cloneable {
         neighbours = new ArrayList<>();
     }
 
-    public Vertex(int width, int height, Color color, Vector2D location, ArrayList<Vertex> neighbours) {
+    public Node(int width, int height, Color color, Vector2D location, ArrayList<Node> neighbours) {
         this.width = width;
         this.height = height;
         this.color = color;
@@ -28,26 +28,18 @@ public class Vertex implements Cloneable {
         this.neighbours = neighbours;
     }
 
-    public Vertex clone() throws CloneNotSupportedException {
+    public Node clone() throws CloneNotSupportedException {
         // Vertex result = new Vertex(this.width, this.height,
         // this.color,this.location.clone(),(ArrayList<Vertex>)
         // this.neighbours.clone());
         // return result;
-        return (Vertex) super.clone();
+        return (Node) super.clone();
     }
 
-    public Vertex getRandomNeighbours() {
+    public Node getRandomNeighbours() {
         if (neighbours.size() == 0)
             return null;
         else
             return neighbours.get(Utils.random.nextInt(neighbours.size()));
-    }
-
-    private Vertex newNode() {
-        Vector2D location = new Vector2D(Utils.random.nextInt(WIDTH * SCALE), Utils.random.nextInt(HEIGHT
-                * SCALE));
-        Vertex vertex = new Vertex(DefaultNodeWidth, DefaultNodeHeight, DefaultNodeInitColor, location);
-        // findLinks(vertex);
-        return vertex;
     }
 }

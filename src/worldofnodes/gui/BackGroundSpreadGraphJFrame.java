@@ -2,7 +2,7 @@ package worldofnodes.gui;
 
 import myutils.Utils;
 import myutils.gui.Colors;
-import worldofnodes.core.graph.Vertex;
+import myutils.maths.graph.Vertex;
 
 /**
  * Created by beenotung on 12/5/14.

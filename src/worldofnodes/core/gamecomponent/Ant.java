@@ -1,7 +1,7 @@
 package worldofnodes.core.gamecomponent;
 
 import myutils.Vector2D;
-import worldofnodes.core.graph.Vertex;
+import myutils.maths.graph.Vertex;
 
 import java.awt.*;
 

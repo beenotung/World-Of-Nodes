@@ -4,8 +4,8 @@ import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.Colors;
 import worldofnodes.core.gamecomponent.Ant;
-import worldofnodes.core.graph.Edge;
-import worldofnodes.core.graph.Vertex;
+import myutils.maths.graph.Edge;
+import myutils.maths.graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class AntSpreadGraphJFrame extends GraphJFrame {
     protected Vector<Ant> ants = new Vector<>();
 
     public AntSpreadGraphJFrame(double widthRate, double heightRate, int scale) {
-        super(widthRate, heightRate, scale);
+                super(widthRate, heightRate, scale);
         frame.setTitle(APP_NAME);
     }
 

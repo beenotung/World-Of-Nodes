@@ -3,9 +3,9 @@ package worldofnodes.gui;
 import myutils.Utils;
 import myutils.Vector2D;
 import myutils.gui.CanvasJFrame;
-import worldofnodes.core.graph.Edge;
-import worldofnodes.core.graph.Graph;
-import worldofnodes.core.graph.Vertex;
+import myutils.maths.graph.Edge;
+import myutils.maths.graph.Graph;
+import myutils.maths.graph.Vertex;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,8 +37,12 @@ public abstract class GraphJFrame extends CanvasJFrame {
         graph = new Graph();
     }
 
+    public GraphJFrame(double widthRate, double heightRate, int scale, String title) {
+        this((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, title, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
+    }
+
     public GraphJFrame(double widthRate, double heightRate, int scale) {
-        this((int) Math.round(screen.getWidth() * widthRate), (int) Math.round(screen.getHeight() * heightRate), scale, APP_NAME, DEFAULT_NS_PER_TICK, DEFAULT_NS_PER_RENDER);
+        this(widthRate, heightRate, scale, APP_NAME);
     }
 
     public void setNodeInitColor(Color nodeInitColor) {
@@ -61,7 +65,7 @@ public abstract class GraphJFrame extends CanvasJFrame {
         vertexes.removeAllElements();
         for (int iNode = 0; iNode < this.numNode; iNode++) {
             vertexes.add(newNode());
-            graph.generateVertex()
+            graph.newVertex();
         }
     }
 
