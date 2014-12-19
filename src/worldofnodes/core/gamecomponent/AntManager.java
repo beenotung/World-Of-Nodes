@@ -1,6 +1,6 @@
 package worldofnodes.core.gamecomponent;
 
-import myutils.Vector2D;
+import myutils.maths.graph.Graph;
 
 import java.util.Vector;
 
@@ -9,13 +9,26 @@ import java.util.Vector;
  */
 public class AntManager {
     private Vector<Ant> ants;
-    public AntManager(){
-        ants=new Vector<Ant>();        
+    private Graph graph;
+
+    public AntManager() {
+        ants = new Vector<Ant>();
     }
-    public void addAnt(Ant ant){
-        ants.add(ant);        
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
-    public void addNewAnt(){
-        ants.add(new Ant());
+
+    public void addAnt(Ant ant) {
+        ants.add(ant);
+    }
+
+    public void addNewAnt() {
+        ants.add(new Ant(graph, graph.));
+    }
+
+    public void init() {
+        ants.removeAllElements();
+
     }
 }

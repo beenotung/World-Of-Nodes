@@ -1,11 +1,11 @@
 package worldofnodes.gui;
 
 import myutils.Utils;
-import myutils.Vector2D;
 import myutils.gui.Colors;
-import worldofnodes.core.gamecomponent.Ant;
 import myutils.maths.graph.Edge;
+import myutils.maths.graph.Vector2D;
 import myutils.maths.graph.Vertex;
+import worldofnodes.core.gamecomponent.Ant;
 
 import java.util.ArrayList;
 import java.util.Collections;

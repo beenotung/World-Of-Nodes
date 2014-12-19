@@ -1,28 +1,30 @@
 package worldofnodes.core.gamecomponent;
 
-import java.util.Vector;
+import myutils.maths.graph.Graph;
+import myutils.maths.graph.Range2D;
+
+import java.awt.*;
 
 /**
  * Created by beenotung on 12/19/14.
  */
 public class Map {
+    public Range2D<Integer> range2D;
+    public Color backgroundColor;
     public NodeManager nodeManager;
     public AntManager antManager;
-    
-    public int xMin,yMin,xMax,yMax;
+    private Graph graph;
 
-    public Map(int xMin, int yMin, int xMax, int yMax) {
-        this.xMin = xMin;
-        this.yMin = yMin;
-        this.xMax = xMax;
-        this.yMax = yMax;
-        nodeManager=new NodeManager();
-        antManager=new AntManager();
+    public Map(Range2D<Integer> range2D, Color backgroundColor, NodeManager nodeManager, AntManager antManager) {
+        this.range2D = range2D;
+        this.backgroundColor = backgroundColor;
+        this.nodeManager = nodeManager;
+        this.antManager = antManager;
     }
 
-
-    public void init(int numNode){
-                nodeManager.init(numNode);
+    public void init(int numNode) {
+        graph.init();
+        nodeManager.init(numNode);
         antManager.init();
     }
 }

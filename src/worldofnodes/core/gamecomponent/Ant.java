@@ -1,6 +1,6 @@
 package worldofnodes.core.gamecomponent;
 
-import myutils.Vector2D;
+import myutils.maths.Vector2D;
 import myutils.maths.graph.Graph;
 import myutils.maths.graph.Vertex;
 

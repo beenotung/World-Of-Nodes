@@ -1,10 +1,10 @@
 package worldofnodes.gui;
 
 import myutils.Utils;
-import myutils.Vector2D;
 import myutils.gui.CanvasJFrame;
 import myutils.maths.graph.Edge;
 import myutils.maths.graph.Graph;
+import myutils.maths.graph.Vector2D;
 import myutils.maths.graph.Vertex;
 
 import java.awt.*;
